@@ -148,7 +148,10 @@ plan" block below, copied verbatim.
    schema, agent frontmatter) check `claude --help`, `claude plugin --help` or the
    docs instead of assuming.
 5. After each step, give a short summary of what changed, tick the checkbox, and
-   commit if the changed folder is under version control.
+   commit if the changed folder is under version control. Config changes are never
+   left uncommitted: after any edit, commit before finishing. At the start of a
+   run, report any uncommitted config that was already there and ask me before
+   committing it.
 6. Anything destructive gets an exact list and a backup first, and I confirm the
    list. Do not run broad cleanups (cache prunes, recursive deletes) that I did not
    ask for.
@@ -279,7 +282,9 @@ agent write the full file and ask me before creating it.
   CI or the tests could not run locally, and hand off with the PR body on my
   clipboard. Hard rules inside it: never merge, never comment, never request
   reviewers, never push to protected branches, switch to the right CLI account
-  before the first call, and ask when acceptance criteria are unclear.
+  before the first call, and ask when acceptance criteria are unclear. Create new
+  PRs only as drafts, and never change an existing PR's draft or ready state in
+  either direction; I mark PRs ready myself.
 - Load check: after a restart, run `/context all` again and compare with the audit
   measurements. Report real numbers, not estimates.
 - Delegation check: in a fresh headless session, have one agent delegate to another
@@ -317,6 +322,10 @@ agent write the full file and ask me before creating it.
 - The GitHub CLI can fail on `issue view` and `pr edit` with a "Projects (classic)"
   deprecation error. Read issues and assign through `gh api` instead, and let the
   hook allow self-assignment only.
+- A rule phrased as a state ("every PR is a draft") gets applied to things the
+  agent did not create, for example converting an existing PR back to draft.
+  Phrase rules as actions ("create new PRs as drafts; never change an existing
+  PR's draft or ready state").
 - Agents and skills added during a session do not appear until a fresh session.
   Test in `claude -p`.
 - Do not widen scope silently. If a cleanup would also affect other projects (a
