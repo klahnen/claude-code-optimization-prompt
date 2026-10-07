@@ -248,6 +248,15 @@ agent write the full file and ask me before creating it.
   - ships with an offline test suite that uses fake binaries for the CLI and client,
     covering concurrency, busy, timeout, expired session, failure cleanup, output
     capping and validation; then one small live query that I approve.
+  - Plan for bulk exports from the start. A row cap and a short time limit make
+    full-population exports (audit evidence, user lists) impossible, and the agent
+    then falls back to handing me SQL to run by hand, with no way to verify the
+    file. Give database wrappers a second, separate export mode: one SELECT, paged
+    by primary key in chunks that each fit the time limit, streamed to a file in the
+    output folder, with its own total-row cap, the same read-only checks, the same
+    logging, and a printed row count and checksum. Tell the query agent about it and
+    allow it with its own rule. Handing me a query is only for systems no agent or
+    wrapper can reach.
   - A hook rule then denies direct use of the underlying client or CLI against that
     system, so agents must go through the wrapper. Add allow rules for the wrapper
     in both the `~` and absolute path forms.
