@@ -309,6 +309,11 @@ agent write the full file and ask me before creating it.
 - Measure context with `/context all`; estimates were wrong by a wide margin.
 - Hook false positives from plain text matching are the most common source of
   blocked work. Test for them.
+- Browser tool calls carry a tab ID, not the page URL, so a guard that matches
+  URLs in the tool input only sees navigations. Record which tabs were navigated
+  to sensitive sites and judge write actions (typing, key presses, form input,
+  uploads, scripts, send clicks) per tab. Check every step of batch tools, and
+  match parsed hostnames, not substrings.
 - The GitHub CLI can fail on `issue view` and `pr edit` with a "Projects (classic)"
   deprecation error. Read issues and assign through `gh api` instead, and let the
   hook allow self-assignment only.
