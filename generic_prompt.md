@@ -151,7 +151,8 @@ plan" block below, copied verbatim.
    commit if the changed folder is under version control. Config changes are never
    left uncommitted: after any edit, commit before finishing. At the start of a
    run, report any uncommitted config that was already there and ask me before
-   committing it.
+   committing it. If the notes folder has a remote, push after committing; the
+   shared prompt must stay free of anything private.
 6. Anything destructive gets an exact list and a backup first, and I confirm the
    list. Do not run broad cleanups (cache prunes, recursive deletes) that I did not
    ask for.
