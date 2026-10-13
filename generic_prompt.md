@@ -135,6 +135,12 @@ plan" block below, copied verbatim.
 
 ### How to execute this plan (copy into the plan)
 
+0. Who executes: the `config-curator` agent, in EXECUTE PLAN mode. Phase 0 is run
+   by the main session, because the curator does not exist yet and agents added in
+   a session do not appear until a fresh one. After Phase 0 step 3 installs it,
+   restart Claude Code and say "use config-curator to continue the plan". It finds
+   the first unticked step and follows this block. Later it also keeps the setup in
+   line with the plan (audit mode).
 1. One step at a time, in order. Do not batch steps or skip ahead.
 2. Show every change before applying it. New file: show the full content. Edited
    file: show a unified diff. Deletion, move, plugin or MCP operation: show the
@@ -175,6 +181,16 @@ it, and its decision points.
 - Put the config folder under git with a `.gitignore` for transcripts, caches,
   runtime state, plugin caches and downloaded marketplaces; scan the staged list
   for secrets before the first commit; commit after every later step.
+- Install `config-curator` by default, as step 3 of this phase. Source:
+  `https://raw.githubusercontent.com/klahnen/claude-code-optimization-prompt/main/agents/config-curator.md`
+  (also `agents/config-curator.md` in the repo). Fetch it at execution time, show
+  the full content, wait for my OK, then write it to `~/.claude/agents/config-curator.md`
+  (if the file exists, show a diff instead). Check that it has valid frontmatter
+  and that no other agent has a colliding description. Verify in a fresh headless
+  session (`claude -p`) that the agent is listed, commit, then tell me to restart
+  so the rest of the plan runs through it. If the fetch fails, ask me for a local
+  copy; do not rewrite it from memory. Decision point: install it, or skip and
+  have the main session execute the plan.
 
 **Phase 1: Guardrail hook**
 - A `PreToolUse` hook script with tiers: always deny (merge, force push, push to
@@ -339,4 +355,6 @@ agent write the full file and ask me before creating it.
 When both files are written, tell me their paths and approximate sizes, list the
 decisions you made on my behalf (there should be none that are not marked as a
 default), and list the questions that remain open. Do not start executing the plan.
-I will review it, change what I want, and tell you when to begin.
+I will review it, change what I want, and tell you when to begin. Remind me of the
+execution path: the main session runs Phase 0 (which installs `config-curator`),
+then I restart and `config-curator` runs the remaining phases.
