@@ -342,6 +342,10 @@ agent write the full file and ask me before creating it.
 - `gh search` returns 30 results by default and does not say it stopped. Pass
   `--limit` on every search, and have agents report a possible truncation when a
   result count hits the limit or does not match the rows listed.
+- When issues live in a separate tracker repo, `gh issue view <n>` and
+  `gh issue create` run from a code repo resolve against the code repo. Name the
+  tracker repo once in the global CLAUDE.md and have skills pass `--repo` or a full
+  issue URL.
 - A rule phrased as a state ("every PR is a draft") gets applied to things the
   agent did not create, for example converting an existing PR back to draft.
   Phrase rules as actions ("create new PRs as drafts; never change an existing
