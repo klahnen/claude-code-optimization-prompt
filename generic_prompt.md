@@ -339,6 +339,9 @@ agent write the full file and ask me before creating it.
 - The GitHub CLI can fail on `issue view` and `pr edit` with a "Projects (classic)"
   deprecation error. Read issues and assign through `gh api` instead, and let the
   hook allow self-assignment only.
+- `gh search` returns 30 results by default and does not say it stopped. Pass
+  `--limit` on every search, and have agents report a possible truncation when a
+  result count hits the limit or does not match the rows listed.
 - A rule phrased as a state ("every PR is a draft") gets applied to things the
   agent did not create, for example converting an existing PR back to draft.
   Phrase rules as actions ("create new PRs as drafts; never change an existing
