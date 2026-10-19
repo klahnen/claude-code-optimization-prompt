@@ -339,6 +339,11 @@ agent write the full file and ask me before creating it.
 - The GitHub CLI can fail on `issue view` and `pr edit` with a "Projects (classic)"
   deprecation error. Read issues and assign through `gh api` instead, and let the
   hook allow self-assignment only.
+- Adding an issue to a project with `gh issue create --project` or
+  `gh issue edit --add-project` can fail on the same classic-projects GraphQL error.
+  Create the issue without `--project`, then run
+  `gh project item-add <number> --owner <org> --url <issue-url>`; this needs the
+  `project` token scope.
 - `gh search` returns 30 results by default and does not say it stopped. Pass
   `--limit` on every search, and have agents report a possible truncation when a
   result count hits the limit or does not match the rows listed.
