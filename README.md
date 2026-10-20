@@ -38,7 +38,8 @@ exposed.
 ## What the plan covers
 
 A safety net (backup and version control for your config), a guardrail hook that
-blocks merges, force pushes and messages to people, cleanup of unused plugins,
+blocks merges, force pushes and messages to people, allow rules for read-only
+commands so agents do not stall on prompts, cleanup of unused plugins,
 skills and servers, read-only agents and wrapper scripts for sensitive systems,
 hygiene for stale settings and worktrees, and a first dry run on a real task.
 

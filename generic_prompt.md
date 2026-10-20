@@ -206,7 +206,17 @@ it, and its decision points.
 - Match connector tool names too, and check them against the tools actually present
   in this session: block writes and sends, allow reads and drafts, and show me the
   matched and unmatched lists.
+- Contact rules either deny or ask. Prefer deny when agents run unattended: an ask
+  inside a subagent or a headless run waits for an answer nobody gives.
 - Register it in settings with a deny-rule safety net for the worst commands.
+- Allow read-only command families in settings so agents do not stop on prompts for
+  harmless reads: status, log, diff and show for version control; view and list for
+  the code host, CI and cloud CLIs; local inspection tools. A guardrail setup taken
+  too far leaves read-only agents, and subagents with nobody to answer, stalled on
+  prompts. Keep the hook as the safety net, keep writes prompting (for example raw
+  API calls, unless the hook already judges them), and check every rule against the
+  allowlist gotchas below. List what each agent runs and confirm it is covered. If I
+  run in a mode that skips prompts, these rules do nothing there; say so.
 - Tests: a script that feeds piped JSON cases and prints a results table. Include
   hard-deny, contact, allow, false-positive regressions (blocked phrases inside
   heredocs, echo, grep, commit messages, comments) and bypass attempts that must
@@ -336,6 +346,25 @@ agent write the full file and ask me before creating it.
   to sensitive sites and judge write actions (typing, key presses, form input,
   uploads, scripts, send clicks) per tab. Check every step of batch tools, and
   match parsed hostnames, not substrings.
+- Judge a send-labelled browser click by its label fields only (text, label, title,
+  description, name), not by every string in the tool input. Element refs, tool
+  names and URLs in the same input otherwise trip the send-word check and block
+  harmless clicks. Clicks given only by ref or coordinates are then not judged by
+  label; record that as a known gap.
+- A `*` in the middle of a Bash allow rule matches any text, including other
+  arguments: `Bash(<cli> * get-*)` also allows `<cli> <service> delete-thing --name
+  get-x`. Write rules with a fixed prefix up to the verb
+  (`Bash(<cli> <service> describe-*)`). Test a new pattern in
+  `claude -p --settings <file>` with a harmless command that is not auto-approved
+  anyway; read-only built-ins such as `echo` run without any rule and prove nothing.
+- A read verb is not always harmless. Get-style cloud calls return secret values
+  (secret stores, parameter stores with decryption, login passwords) or download
+  objects, and some inspection tools have flags that run commands or write
+  (`rg --pre`, `git branch -D`, `git diff --output`). Deny those explicitly (deny
+  rules win over allow rules), or allow only the exact subcommands you mean.
+- Bash rules match the command text, so a path in one needs both the `~` and the
+  absolute form. Agents that write to an output folder outside the project also
+  need `Write` and `Edit` rules for that folder, or every write there prompts.
 - The GitHub CLI can fail on `issue view` and `pr edit` with a "Projects (classic)"
   deprecation error. Read issues and assign through `gh api` instead, and let the
   hook allow self-assignment only.
