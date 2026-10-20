@@ -359,6 +359,11 @@ agent write the full file and ask me before creating it.
   Test in `claude -p`.
 - Do not widen scope silently. If a cleanup would also affect other projects (a
   global prune, a shared cache), ask first.
+- Forbid `pkill` and `killall` in agent rules, with any flags or patterns. A
+  pattern match can hit the whole GUI session (a `pkill -f 'cat'` once closed the
+  terminal and browsers). To stop a hung test, find the exact pid with `pgrep`,
+  check it is the agent's own, and `kill <pid>`; better, avoid the hang with
+  `timeout` and `</dev/null` in the test command.
 - Do not store hostnames, account IDs or passwords in tracked config. If I choose to
   keep a password in a local file, it is my decision; note the trade-off once.
 
