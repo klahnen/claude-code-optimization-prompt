@@ -418,6 +418,12 @@ agent write the full file and ask me before creating it.
   terminal and browsers). To stop a hung test, find the exact pid with `pgrep`,
   check it is the agent's own, and `kill <pid>`; better, avoid the hang with
   `timeout` and `</dev/null` in the test command.
+- If an agent may stage drafts by typing into a chat composer, treat a line break in
+  typed text as a send: many composers send on Enter, and a type action with a
+  newline presses it. Have the agent insert breaks with shift+Enter only and confirm
+  nothing was sent, and in the guard track those tabs separately from read-only
+  messaging sites: allow typing, deny unshifted Enter, typed line breaks and
+  send-labelled clicks.
 - Do not store hostnames, account IDs or passwords in tracked config. If I choose to
   keep a password in a local file, it is my decision; note the trade-off once.
 
