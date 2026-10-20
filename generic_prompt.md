@@ -357,6 +357,19 @@ agent write the full file and ask me before creating it.
   (`Bash(<cli> <service> describe-*)`). Test a new pattern in
   `claude -p --settings <file>` with a harmless command that is not auto-approved
   anyway; read-only built-ins such as `echo` run without any rule and prove nothing.
+  A headless run reports a deny rule and a missing allow rule the same way, so test
+  a deny rule with a command an existing allow rule would otherwise approve.
+- Fixed-prefix rules miss commands with global flags before the verb
+  (`<cli> --profile p <service> get-x`). Tell agents to put global flags after the
+  verb, in the agent definition, instead of loosening the rule.
+- If raw API calls are allowed because the hook judges writes, check the inputs the
+  hook cannot see: a GraphQL mutation read from a file (`--input`, `-F query=@file`)
+  passes a check that looks for `mutation` in the command. Treat file-loaded
+  queries as writes.
+- Never allow an interpreter run (`python3 -`, `node -e`, a heredoc script) to stop a
+  skill from prompting; any rule that matches it runs arbitrary code. Move the
+  script into a fixed wrapper that takes its input as arguments and allow the
+  wrapper path.
 - A read verb is not always harmless. Get-style cloud calls return secret values
   (secret stores, parameter stores with decryption, login passwords) or download
   objects, and some inspection tools have flags that run commands or write
