@@ -377,7 +377,19 @@ agent write the full file and ask me before creating it.
   rules win over allow rules), or allow only the exact subcommands you mean.
 - Bash rules match the command text, so a path in one needs both the `~` and the
   absolute form. Agents that write to an output folder outside the project also
-  need `Write` and `Edit` rules for that folder, or every write there prompts.
+  need an `Edit` rule for that folder, or every write there prompts.
+- File permission checks only read `Edit(path)` rules, and an `Edit` rule also
+  covers the Write tool; a `Write(path)` allow rule is ignored. In a path rule `~/`
+  is the home folder and `/path` is relative to the settings file; an absolute path
+  needs `//path`.
+- `:*` is a prefix marker only at the end of a rule. Combined with an earlier `*`
+  (`Bash(<cli> -C * status:*)`) the whole rule becomes a literal prefix and never
+  matches. The space form (`Bash(<cli> -C * status *)`) does match, but a `*` before
+  the subcommand also matches inserted global options, and for git `-c` and
+  `--exec-path` run arbitrary commands; a trailing ` *` also misses the bare command
+  with no arguments. Name the exact path in the rule or let the command prompt.
+  `claude -p` prints these rule warnings at startup, so a short headless run checks
+  a settings file for them.
 - The GitHub CLI can fail on `issue view` and `pr edit` with a "Projects (classic)"
   deprecation error. Read issues and assign through `gh api` instead, and let the
   hook allow self-assignment only.
