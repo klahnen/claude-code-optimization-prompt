@@ -341,6 +341,13 @@ agent write the full file and ask me before creating it.
 - Measure context with `/context all`; estimates were wrong by a wide margin.
 - Hook false positives from plain text matching are the most common source of
   blocked work. Test for them.
+- A heredoc-to-shell check has to match the shell as a command word. `\bsh\b`
+  matches `next.sh` and blocks writing any script that mentions a blocked command.
+- Issue lifecycle writes (close, reopen, labels, sub-issues, adding to a project)
+  do not reach a person, but their comment flags do. Block the flag, not the verb.
+- Judge each part of a command chain separately, and read flag values only up to
+  shell separators. Otherwise one allowed call lets a chained write through, and
+  `--assignee @me;` reads as another user.
 - Browser tool calls carry a tab ID, not the page URL, so a guard that matches
   URLs in the tool input only sees navigations. Record which tabs were navigated
   to sensitive sites and judge write actions (typing, key presses, form input,
