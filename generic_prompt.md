@@ -345,6 +345,11 @@ agent write the full file and ask me before creating it.
   matches `next.sh` and blocks writing any script that mentions a blocked command.
 - Issue lifecycle writes (close, reopen, labels, sub-issues, adding to a project)
   do not reach a person, but their comment flags do. Block the flag, not the verb.
+- A guard that allows a CLI verb must also allow the same write through the raw
+  API (REST and GraphQL), judged by payload: allowed fields and values on the exact
+  resource path, required safety fields (for example a draft flag), and an allowlist
+  of mutation names. Deny file inputs, subpaths and unknown fields. Otherwise an
+  allowed edit is blocked when the agent uses the API form.
 - Judge each part of a command chain separately, and read flag values only up to
   shell separators. Otherwise one allowed call lets a chained write through, and
   `--assignee @me;` reads as another user.
